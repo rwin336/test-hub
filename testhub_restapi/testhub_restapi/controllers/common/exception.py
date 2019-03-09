@@ -43,3 +43,16 @@ class RestApiException(Exception):
         else:
             return six.text_type(self)
 
+
+
+class TestInfoDataNotFound(RestApiException):
+    code = 404
+    message = "TestInfoData data not Found"
+
+
+class TestRequestDataNotFound(RestApiException):
+    code = 404
+    message = "TestRequestData data not Found"
+
+
+
