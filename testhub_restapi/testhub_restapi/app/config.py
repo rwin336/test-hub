@@ -17,16 +17,28 @@ app = {
     }
 }
 
+wsme = {
+    'debug': True
+}
+
 logging = {
-    'root': {'level': 'INFO', 'handlers': ['console']},
+    'root': {'level': 'INFO', 'handlers': ['logfile']},
     'loggers': {
-        'testhub_restapi': {'level': 'DEBUG', 'handlers': ['console'], 'propagate': False},
-        'pecan': {'level': 'DEBUG', 'handlers': ['console'], 'propagate': False},
+        'testhub_restapi': {'level': 'DEBUG', 'handlers': ['logfile'], 'propagate': False},
+        'pecan': {'level': 'DEBUG', 'handlers': ['logfile'], 'propagate': False},
         'py.warnings': {'handlers': ['console']},
         '__force_dict__': True
     },
     'handlers': {
-        'console': {
+        'logfile': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'maxBytes': 1000000,
+            'backupCount': 10,
+            'filename': '/var/log/testhub_restapi/testhub_restapi.log',
+            'level': 'DEBUG',
+            'formatter': 'simple'
+        },
+       'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'color'
@@ -46,15 +58,3 @@ logging = {
     }
 }
 
-
-
-# Custom Configurations must be in Python dictionary format::
-#
-# foo = {'bar':'baz'}
-#
-# All configurations are accessible at::
-# pecan.conf
-
-wsme = {
-    'debug': True
-}
