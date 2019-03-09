@@ -120,7 +120,7 @@ def setup_app(config=None):
                                hooks=[ErrorHook()],
                                **app_conf)
     # This Single is useful for the purpose of Debugging of REST API Hang Issue.
-    # To get Traceback of all threads, "systemctl stop mercury-restapi"
+    # To get Traceback of all threads, "systemctl stop testhub-restapi"
     signal.signal(signal.SIGUSR2, signal_handler_traceback)
 
     return pecan_app
