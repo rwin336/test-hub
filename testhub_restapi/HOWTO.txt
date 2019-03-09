@@ -1,0 +1,63 @@
+Notes for creating/starting pecan RESTAPI for test-hub on CVIM PoD.
+
+
+
+Creating the project - Manual process:
+---------------------
+   Ref: https://pecan.readthedocs.io/en/latest/simple_forms_processing.html#project-setup
+
+ $ pip install pecan
+ $ pip install wsme
+ $ pecan create testhub_restapi
+ $ cd testhub_restapi
+ $ python ./setup.py develop
+
+
+Starting the server on CVIM PoD:
+--------------------------------
+
+  1. Update port number in config.py for port 8554
+  2. Open firewall to allow TCP port 8554 for server.
+    1. List current iptable rules
+    2. Find where to insert rule for this server
+    3. Insert rule
+
+    $ sudo iptables -L -n --line-numbers
+    $ sudo iptables -I INPUT 9 -p tcp -m tcp --dport 8554 -j ACCEPT
+
+   Using port 8554 for this server - inserting in chain slot 9.
+
+   iptables ACCEPT after insert
+   $ sudo iptables -L -n --line-numbers
+   Chain INPUT (policy ACCEPT)
+   num  target     prot opt source               destination         
+   1    ACCEPT     all  --  0.0.0.0/0            0.0.0.0/0            state RELATED,ESTABLISHED
+   2    ACCEPT     icmp --  0.0.0.0/0            0.0.0.0/0           
+   3    ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:22
+   4    ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:xxxx
+   5    ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:xxxx
+   6    ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:xxxx
+   7    ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:xxxx
+   8    ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:xxxx
+   9    ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:8554
+   10   ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:xxxx
+   11   DROP       all  --  0.0.0.0/0            0.0.0.0/0           
+
+  3. Start the server
+ 
+    $ sudo pecan serve config.py
+
+  4. Simple test to verify basic operation
+
+    $ curl http://<your-ip-address>:8554
+     <html>
+      <head>
+        <title>
+          Welcome to Pecan!
+       </title>
+     ...
+
+
+        
+
+ 
