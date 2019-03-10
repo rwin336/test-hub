@@ -9,13 +9,13 @@ from testhub_restapi.controllers import base
 from testhub_restapi.controllers.v1 import collection
 from testhub_restapi.controllers.v1 import types
 from testhub_restapi import objects
+import pecan.rest
 import pecan
 from wsme import types as wtypes
 import wsmeext.pecan as wsme_pecan
-import utils.logger as logger
+import logging 
 
-loginst = logger.Logger(name=__name__)
-LOG = loginst.get_logger()
+LOG = logging.getLogger(name=__name__)
 
 
 class TestInfo(base.APIBase):

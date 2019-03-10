@@ -7,12 +7,10 @@ server = {
 # Pecan Application Configurations
 app = {
     'root': 'testhub_restapi.controllers.root.RootController',
-    'modules': ['testhub_restapi'],
-    'static_root': '%(confdir)s/public',
+    'modules': ['testhub_restapi.app'],
     'template_path': '%(confdir)s/testhub_restapi/templates',
     'debug': True,
     'errors': {
-        404: '/error/404',
         '__force_dict__': True
     }
 }

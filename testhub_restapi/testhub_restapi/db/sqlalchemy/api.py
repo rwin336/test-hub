@@ -14,7 +14,8 @@ _FACADE = None
 def _create_facade_lazily():
     global _FACADE
     if _FACADE is None:
-        _FACADE = db_session.EngineFacade.from_config(CONF)
+        #_FACADE = db_session.EngineFacade.from_config(CONF)
+        _FACADE = db_session.EngineFacade( "mysql://root:b7a0432943fbd3418c69@localhost/testhub?charset=utf8")
     return _FACADE
 
 

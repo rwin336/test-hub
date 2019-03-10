@@ -3,9 +3,9 @@ import logging as log_root
 import threading
 import time
 
-from testhub.common import constants
-from testhub.common import utils
-from testhub import objects
+from testhub_restapi.common import constants
+from testhub_restapi.common import utils
+from testhub_restapi import objects
 
 LOG = log_root.getLogger(__name__)
 

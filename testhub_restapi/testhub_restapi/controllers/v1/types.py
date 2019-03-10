@@ -1,3 +1,5 @@
+from oslo_utils import strutils
+from wsme import types as wtypes
 
 class TestInfoType(wtypes.UserType):
     basetype = wtypes.text
@@ -14,4 +16,4 @@ class TestInfoType(wtypes.UserType):
             return None
         return TestInfoType.validate(value)
 
-
+testinfodata = TestInfoType()

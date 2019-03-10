@@ -7,6 +7,7 @@ import traceback
 from testhub_restapi.app import config as restapi_config
 from testhub_restapi import model
 from testhub_restapi import objects
+from testhub_restapi.Installer.TestInfo import TestInfo
 from oslo_config import cfg
 from pecan.hooks import PecanHook
 from pecan import make_app
