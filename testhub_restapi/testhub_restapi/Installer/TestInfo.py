@@ -4,10 +4,10 @@ import threading
 import time
 
 from testhub_restapi.common import constants
-from testhub_restapi.common import utils
 from testhub_restapi import objects
 
 LOG = log_root.getLogger(__name__)
+
 
 class TestInfo(threading.Thread):
 
@@ -17,12 +17,11 @@ class TestInfo(threading.Thread):
         self.q = None
 
     def _update_data(self, uuid, update):
-	LOG.info("TestInfo _update_data for UUID {0}".format(uuid))
+        LOG.info("TestInfo _update_data for UUID {0}".format(uuid))
         objects.TestInfo.save(uuid, update)
 
-
     def _do_testinfo(self, testinfo_data):
-	LOG.info("TestInfo do_testinfo, data: {0}".format(data))
+        LOG.info("TestInfo do_testinfo, data: {0}".format(testinfo_data))
         testinfo_status = constants.TEST_INFO_FAILED
 
         return testinfo_status

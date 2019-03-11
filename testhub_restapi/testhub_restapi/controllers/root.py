@@ -43,7 +43,6 @@ class Root(base.APIBase):
         return root
 
 
-
 class RootController(pecan.rest.RestController):
 
     _versions = ['v1']
@@ -57,9 +56,9 @@ class RootController(pecan.rest.RestController):
         return Root.convert()
 
     @pecan.expose()
-    def _route(self, args):
+    def _route(self, args, request):
 
         if args[0] and args[0] not in self._versions:
             args = [self._default_version] + args
-        return super(RootController, self)._route(args)
+        return super(RootController, self)._route(args, request)
 

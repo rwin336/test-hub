@@ -18,6 +18,33 @@ import logging
 LOG = logging.getLogger(name=__name__)
 
 
+###############################################################################
+# TestInfo
+#
+# TestInfo request
+#
+#  {
+#   'testinfo_request': {
+#              'uuid': '',
+#              'subject': ''
+#              }
+#  }
+#
+#  Example:
+#  {
+#   'testinfo_request': {
+#               'uuid': '',
+#               'subject': 'ui_config'
+#              }
+#  }
+#
+#
+# TestInfo Response:
+#
+#
+#
+
+
 class TestInfo(base.APIBase):
 
     subject = wtypes.text
@@ -29,7 +56,7 @@ class TestInfo(base.APIBase):
         super(TestInfo, self).__init__()
         self.fields = []
 
-        for field in ['uuid', 'action', 'subject', 'status', 'testinfo_request',
+        for field in ['uuid', 'subject', 'status', 'testinfo_request',
                       'testinfo_result', 'created_at', 'updated_at']:
             if not hasattr(self, field):
                 continue
@@ -41,11 +68,10 @@ class TestInfo(base.APIBase):
         return test
 
     @classmethod
-    def convert_with_links(cls, rpc_test, expand=True):
+    def convert_with_links(cls, test, expand=True):
 
-        subject = TestInfo(**rpc_test.as_dict())
-        return cls._convert_with_links(test, pecan.request.host_url, expand)
-
+        subject = TestInfo(**test.as_dict())
+        return cls._convert_with_links(subject, pecan.request.host_url, expand)
 
 
 class TestInfoDeleteResponse(base.APIBase):
@@ -120,7 +146,6 @@ class TestInfoController(pecan.rest.RestController):
                 'uuid': item.uuid,
                 'status': item.status,
                 'created_at': item.created_at,
-                'action': item.action,
                 'subject': item.subject
             }
         return ti_result
@@ -136,7 +161,7 @@ class TestInfoController(pecan.rest.RestController):
             pecan.abort(404, detail="Subject name {0} not in list of valid info subjects".format(kwargs['subject']))
 
         LOG.debug("Reached root of get list: args: test_name={0}".format(kwargs['subject']))
-	ti_result = {}
+        ti_result = {}
         return ti_result
 
     @pecan.expose('json')
@@ -175,11 +200,11 @@ class TestInfoController(pecan.rest.RestController):
         ti_uuid = str(uuid.uuid4())
         testinfo_request['uuid'] = ti_uuid
         testinfo_data['uuid'] = ti_uuid
-        testinfo_data['action'] = testinfo_request['action']
         testinfo_data['subject'] = testinfo_request['subject']
         testinfo_data['status'] = constants.TEST_INFO_PENDING
-        testinfo_data['testinfo_request'] = testinfo_request
-        testinfo_data['testinfo_result'] = {}
+        #testinfo_data['testinfo_request'] = json.dumps(testinfo_request)
+        testinfo_data['testinfo_request'] = ""
+        testinfo_data['testinfo_result'] = ""
         LOG.debug("Creating testinfo object: {0}".format(testinfo_data))
         created = objects.TestInfo.create(testinfo_data)
 
@@ -193,13 +218,6 @@ class TestInfoController(pecan.rest.RestController):
     @wsme_pecan.wsexpose(TestInfo, body=TestInfo, status_code=201)
     def create(self, testinfo):
         LOG.debug("Reached test info create: args = {0}".format(TestInfo))
-
-        try:
-            utils.check_if_running("raise")
-        except exception.RestApiException as e:
-            LOG.debug("Check if running exception: {0}".format(e))
-            msg = str(e)
-            pecan.abort(409, detail=msg)
 
         testinfo_request_str = json.dumps(testinfo.testinfo_request)
         testinfo_request = json.loads(testinfo_request_str)

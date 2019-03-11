@@ -31,7 +31,6 @@ class TestInfo(object):
         'created_at': "",
         'updated_at': "",
         'uuid': "",
-        'action': "",
         'subject': "",
         'status': "",
         'testinfo_result': "",

@@ -68,7 +68,6 @@ class testinfo(Base):
         table_args()
     )
     uuid = Column(String(64), primary_key=True)
-    action = Column(String(64))
     subject = Column(String(64))
     status = Column(String(64))
     testinfo_result = Column(LONGTEXT())
