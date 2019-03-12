@@ -224,14 +224,37 @@ class TestInfoController(pecan.rest.RestController):
         LOG.debug("TestInfo request: {0}".format(testinfo_request))
         return self._run_testinfo(testinfo_request)
 
-
     @pecan.expose('json')
     def delete(self, **kwargs):
         LOG.debug("Reached testinfo delete with %s", kwargs)
 
-        #csdr = {'uuid': kwargs['uuid'],
-        #        'status': status,
-        #        'error': error,
-        #        'message': msg}
-        #return csdr
+        if 'uuid' not in kwargs:
+            LOG.debug("Missing arguments: Expected uuid: Actual: {0}".format(kwargs))
+            pecan.abort(404, detail="Error details: Missing arguments")
 
+        LOG.debug("TestInfo delete request UUID: {0}".format(kwargs['uuid']))
+        try:
+            LOG.debug("TestInfo: Delete: getting uuid from database")
+            testinfo = objects.TestInfo.get_by_uuid(kwargs['uuid'])
+            LOG.debug("TestInfo: Delete: Received object from database: {0}".format(testinfo))
+            if testinfo.status == constants.TEST_INFO_RUNNING:
+                status = 'failed'
+                error = 'UUID {0} still running'.format(kwargs['uuid'])
+                msg = 'UUID {0} not deleted from database'.format(kwargs['uuid'], status)
+                pecan.abort(409, detail=error)
+            else:
+                LOG.debug("Performing delete")
+                testinfo.delete()
+                status = 'deleted'
+                error = 'None'
+                msg = 'UUID {0} deleted from database'.format(kwargs['uuid'])
+                LOG.debug("Delete complete: {0}".format(kwargs['uuid']))
+        except exception.TestInfoDataNotFound as e:
+            LOG.debug("TestInfoDataNotFound not found for uuid {0}".format(kwargs['uuid']))
+            pecan.abort(404, detail="Error details: " + str(e))
+
+        tidr = {'uuid': kwargs['uuid'],
+                'status': status,
+                'error': error,
+                'message': msg}
+        return tidr
