@@ -4,12 +4,15 @@ import threading
 import time
 
 from testhub_restapi.common import constants
+from testhub_restapi.common import exception
+from testhub_restapi.reqmgr.testinfo import TestInfoEventFactory
+from testhub_restapi.reqmgr.common import Listener
 from testhub_restapi import objects
 
 LOG = log_root.getLogger(__name__)
 
 
-class TestInfo(threading.Thread):
+class TestInfo(threading.Thread, Listener):
 
     def __init__(self):
         threading.Thread.__init__(self)
@@ -22,9 +25,17 @@ class TestInfo(threading.Thread):
 
     def _do_testinfo(self, testinfo_data):
         LOG.info("TestInfo do_testinfo, data: {0}".format(testinfo_data))
-        testinfo_status = constants.TEST_INFO_FAILED
-
-        return testinfo_status
+        update = {"status": constants.TEST_INFO_RUNNING}
+        self._update_data(testinfo_data.uuid, update)
+        try:
+            LOG.debug('Starting testinfo for %s : ' % str(testinfo_data.uuid))
+            handler = TestInfoEventFactory.factory(testinfo_data.subject)
+            LOG.debug("Handler created: {0}".format(handler))
+            LOG.debug("Acquiring test info")
+            handler.acquire(testinfo_data)
+            LOG.debug("Test info acquired")
+        except Exception as e:
+            LOG.error("Exception during Request handler dispatch: {0}".format(e))
 
     def run(self):
         while(True):
@@ -39,4 +50,3 @@ class TestInfo(threading.Thread):
                         self._do_testinfo(item)
                     except Exception:
                         LOG.error('Fatal Exception', exc_info=True)
-

@@ -13,3 +13,5 @@ FAULT_REQUEST_COMPLETE = "FaultRequestComplete"
 FAULT_REQUEST_PENDING = "FaultRequestPending"
 
 
+TEST_INFO_SUBJECT_UI_CONFIG = "ui_config"
+TEST_INFO_SUBJECT_POD_INVENTORY = "pod_inventory"

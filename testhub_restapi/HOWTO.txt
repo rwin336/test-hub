@@ -98,6 +98,10 @@ Starting the server on CVIM PoD:
         created_at timestamp default current_timestamp);
 
 
+  8. Start the server
+
+      $ pecan serve app/config.py
+
  
   8. curl commands
 

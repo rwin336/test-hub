@@ -59,3 +59,11 @@ class FaultDataNotFound(RestApiException):
     message = "TestInfoData data not Found"
 
 
+class TestInfoEventNotFound(RestApiException):
+    code = 404
+    message = "TestInfoEventNotFound"
+
+
+class MethodNotImplemented(RestApiException):
+    code = 404
+    message = "MethodNotImplemented"

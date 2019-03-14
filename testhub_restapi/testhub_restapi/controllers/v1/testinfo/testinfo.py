@@ -202,8 +202,8 @@ class TestInfoController(pecan.rest.RestController):
         testinfo_data['uuid'] = ti_uuid
         testinfo_data['subject'] = testinfo_request['subject']
         testinfo_data['status'] = constants.TEST_INFO_PENDING
-        #testinfo_data['testinfo_request'] = json.dumps(testinfo_request)
-        testinfo_data['testinfo_request'] = ""
+        testinfo_data['testinfo_request'] = json.dumps(testinfo_request)
+        #testinfo_data['testinfo_request'] = ""
         testinfo_data['testinfo_result'] = ""
         LOG.debug("Creating testinfo object: {0}".format(testinfo_data))
         created = objects.TestInfo.create(testinfo_data)
