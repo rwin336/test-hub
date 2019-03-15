@@ -1,5 +1,7 @@
 import logging as log_root
 import json
+import os
+
 
 from testhub_restapi.common import constants
 from testhub_restapi.common import exception
@@ -59,14 +61,18 @@ class UiConfigJobHandler(TestInfoJobHandler):
     def acquire(self, info_request):
         self.info_request = info_request
         LOG.info("UiConfigJobHandler{0}: acquire: info_request: {0}".format(self.oid, self.info_request))
-        updated = {"status": constants.TEST_INFO_COMPLETE,
-                   "testinfo_result": json.dumps({'subject': 'ui_config',
-                                                  'result': {"Kibana-Url": "url",
-                                                             "RestAPI-Username": "user",
-                                                             "RestAPI-Password": "pw1",
-                                                             "RestDB-Password": "pw2",
-                                                             "RestAPI-Url": "url",
-                                                             "BuildNodeIP": "192.168.1.1"}})}
+
+        if os.path.isfile('/opt/cisco/ui_config.json'):
+            with open('/opt/cisco/ui_config.json') as f:
+                ui_config = json.load(f)
+
+            updated = {"status": constants.TEST_INFO_COMPLETE,
+                       "testinfo_result": json.dumps(ui_config)}
+
+        else:
+            updated = {"status": constants.TEST_INFO_COMPLETE,
+                       "testinfo_result": ""}
+
         self._update_data(info_request.uuid, updated)
 
 
