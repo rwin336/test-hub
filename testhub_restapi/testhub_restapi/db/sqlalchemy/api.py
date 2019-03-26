@@ -5,6 +5,7 @@ from oslo_config import cfg
 from oslo_db import exception as db_exc
 from oslo_db.sqlalchemy import session as db_session
 import sqlalchemy.orm.exc
+import ConfigParser
 
 CONF = cfg.CONF
 
@@ -14,8 +15,11 @@ _FACADE = None
 def _create_facade_lazily():
     global _FACADE
     if _FACADE is None:
-        #_FACADE = db_session.EngineFacade.from_config(CONF)
-        _FACADE = db_session.EngineFacade( "mysql://root:b7a0432943fbd3418c69@localhost/testhub?charset=utf8")
+        app_file = '/opt/testhub/testhub_restapi/app.conf'
+        config = ConfigParser.RawConfigParser()
+        config.read(app_file)
+        connection_url = config.get('database', 'connection')
+        _FACADE = db_session.EngineFacade(connection_url)
     return _FACADE
 
 
